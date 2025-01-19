@@ -1,6 +1,4 @@
-Here's the content formatted in GitHub Markdown:  
 
-```markdown
 # Interactive MCQ Platform
 
 A modern, interactive Multiple Choice Questions (MCQ) platform built with React and Redux, featuring a clean user interface powered by Tailwind CSS.
@@ -108,5 +106,5 @@ This project is licensed under the MIT License. See the [LICENSE.md](LICENSE.md)
 
 Your Name - [burhanuddinjamali931@gmail.com]  
 Project Link: [https://github.com/BURHANUDDIN51-PYTHON/ReactMCQ]  
-```
+
 
