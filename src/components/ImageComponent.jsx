@@ -6,6 +6,7 @@ import storageService from '../appwrite/storage'
     const [imageUrl, setImageUrl] = useState(null);
     // useEffect to get the image of he questions
     useEffect(() => {
+       setImageUrl(null);
         const questionId = subjectQuestions ? subjectQuestions[currentIndex]?.imageId : null;
         const imgUrl = questionId ? storageService.getFile(questionId): null;
         //console.log(imgUrl);

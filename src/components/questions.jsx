@@ -25,7 +25,7 @@ const Questions = () => {
     const [selectedOption, setSelectedOption] = useState("");
     const [isOptionCorrect, setIsOptionCorrect] = useState(false);
     const [isOptionIncorrect, setIsOptionIncorrect] = useState(false);
-    const [isInput, setIsInput] = useState(false);
+    const [isInput, setIsInput] = useState(null);
     const navigate = useNavigate();
 
     const [userAnswer, setUserAnswer] = useState('');
@@ -47,7 +47,7 @@ const Questions = () => {
     useEffect(() => {
         const questions = allQuestions.filter(question => question.subject === subject);
 
-        setSubjectQuestions(shuffleArray(questions));
+        setSubjectQuestions(allQuestions.filter(question => question.subject === subject));
     }, [allQuestions])
     
 
@@ -55,7 +55,7 @@ const Questions = () => {
     useEffect(() => {
         if (subjectQuestions && !subjectQuestions[currentQuestionIndex]?.options.length > 0) {
             setIsInput(true);
-        }
+        } else setIsInput(false);
     }, [subjectQuestions, isInput, currentQuestionIndex])
 
 
@@ -131,16 +131,14 @@ const Questions = () => {
                     Question {currentQuestionIndex + 1} of {subjectQuestions.length}
                   </h2>
                   <p className="text-gray-700 mb-4">
-                    {subjectQuestions[currentQuestionIndex].question}
-                    
-                    <ImageComponent 
+                    {subjectQuestions[currentQuestionIndex].question}                      
+                  </p>
+                  <ImageComponent 
                       subjectQuestions={subjectQuestions}
                       currentIndex={currentQuestionIndex}
                     />
-                                         
-                  </p>
                   <div className="space-y-2">
-                    {subjectQuestions[currentQuestionIndex]['options']?.length > 0 && subjectQuestions[currentQuestionIndex]['options']?.map(
+                    { !isInput && subjectQuestions[currentQuestionIndex]['options']?.length > 0 && subjectQuestions[currentQuestionIndex]['options']?.map(
                       (option, index) => (
                         <div key={index} className="flex items-center">
                           <input

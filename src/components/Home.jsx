@@ -58,7 +58,7 @@ const Home = () => {
                 onChange={(event) => setSelectedSubject(event.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
-                <option  value="" selected disabled>Choose a subject</option>
+                <option  value=""  disabled>Choose a subject</option>
                 {subjects && subjects.map((subject, index) => (
                   <option key={index} value={subject}>
                     {subject}
