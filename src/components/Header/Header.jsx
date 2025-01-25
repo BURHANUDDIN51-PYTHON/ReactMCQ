@@ -12,13 +12,7 @@ const Navbar = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    // super user ID
-    const [isSuper, setIsSuper] = useState(false);
-    useEffect(() => {
-        if(userData && userData.labels.includes('admin')) setIsSuper(true);
-        else setIsSuper(false);
-       
-    }, [userData, authStatus])
+    
 
    
   return (
@@ -28,14 +22,14 @@ const Navbar = () => {
           {/* Logo */}
           <div className="flex items-center">
             <Link to='/' className="text-2xl font-bold text-gray-800">
-              MCQ's
+              Q&A
             </Link>
           </div>
 
           {/* Navigation Links */}
           <div className="hidden md:flex space-x-10 ml-auto">
 
-            {authStatus && isSuper ? (
+            {authStatus ? (
                 <Link
                  to="/addQuestion"
                  className="text-gray-800 text-sm font-semibold hover:text-blue-500"

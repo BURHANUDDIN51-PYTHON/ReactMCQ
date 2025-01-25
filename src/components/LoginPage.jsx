@@ -16,6 +16,10 @@ const LoginPage = () => {
   // Set up the variables
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (authStatus) navigate('/');
+  }, [authStatus])
   
   // Now handle submit
   const handleSubmit = async () => {

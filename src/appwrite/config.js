@@ -19,7 +19,7 @@ export class DatabaseService {
     // use the async functions to do the database operation
 
     // Add a question to the database
-    async addQuestion({question, subject, options, correctAnswer}) {
+    async addQuestion({question, subject, options, correctAnswer, userId, imageId}) {
         try {
             return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
@@ -29,7 +29,9 @@ export class DatabaseService {
                     question,
                     options,
                     subject,
-                    correctAnswer
+                    correctAnswer, 
+                    userId, 
+                    imageId
                 }
             )
         } catch (error) {
@@ -38,7 +40,7 @@ export class DatabaseService {
     }
 
     // Edit or update a questoin in the database
-    async editQuestion(slug, {question, subject, options, correctAnswer}) {
+    async editQuestion(slug, {question, subject, options, correctAnswer, imageId}) {
         try {
             return await this.databases.updateDocument(
                 conf.appwriteDatabaseId,
@@ -48,7 +50,8 @@ export class DatabaseService {
                     question,
                     subject,
                     options,
-                    correctAnswer
+                    correctAnswer,
+                    imageId,
                 }
             )
         } catch (error) {

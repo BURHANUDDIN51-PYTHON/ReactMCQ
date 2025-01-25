@@ -5,6 +5,9 @@ import Signup from './Signup.jsx'
 import Home from './Home.jsx'
 import Header from './Header/Header.jsx'
 import Footer from './Footer/Footer.jsx'
+import Questions from './Questions.jsx'
+import ImageInput from './HandleImage.jsx'
+import ImageComponent from './ImageComponent.jsx'
 
 export {
     AddQuestion, 
@@ -14,4 +17,7 @@ export {
     Home,
     Header,
     Footer,
+    Questions,
+    ImageInput,
+    ImageComponent
 }
