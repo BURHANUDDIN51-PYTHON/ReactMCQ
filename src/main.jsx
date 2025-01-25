@@ -5,7 +5,7 @@ import store from './store/store.js'
 import './index.css'
 import App from './App.jsx'
 import { createBrowserRouter, createRoutesFromElements, RouterProvider, Route } from 'react-router'
-import {Home, LoginPage, Signup, EditQuestion, AddQuestion} from './components/index.js'
+import {Home, LoginPage, Signup, EditQuestion, AddQuestion, Questions} from './components/index.js'
 import Protected from './components/Protection.jsx'
 
 
@@ -23,11 +23,11 @@ const router = createBrowserRouter(
 
       <Route path='/signup' element={<Signup/>}/>
 
-      {/* <Route path='/questions/' element={
+      <Route path='/questions/:subject' element={
         <Protected authentication={true}>
-          <Question />
-        </Protected>}/> */}
-
+          <Questions />
+        </Protected>}/>
+      
         
       {/* add qustions */}
       <Route path='/addQuestion' element={

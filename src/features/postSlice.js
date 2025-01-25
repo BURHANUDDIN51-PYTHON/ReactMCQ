@@ -28,6 +28,7 @@ const postSlice = createSlice({
                     question.options = action.payload.options;
                     question.answer = action.payload.answer;
                     question.subject = action.payload.subject;
+                    question.imageId = action.payload.imageId;
                 }
             })
         },

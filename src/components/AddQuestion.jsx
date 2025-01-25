@@ -2,22 +2,56 @@ import React, {useState, useEffect} from 'react'
 import databaseService from '../appwrite/config'
 import { useNavigate } from 'react-router'
 import { nanoid } from 'nanoid'; 
-import { useDispatch} from 'react-redux'
+import { useDispatch, useSelector} from 'react-redux'
 import { addQuestion } from '../features/postSlice';
+import  ImageInput  from './HandleImage'
+import storageService from '../appwrite/storage';
 
 const AddQuestion = () => {
   const [subject, setSubject] = useState("");
   const [question, setQuestion] = useState("");
-  const [options, setOptions] = useState(["", ""]); // Start with 2 options
+  const [options, setOptions] = useState([]); // Start with 2 options
+  const [isOption, setIsOption] = useState(false);
   const [correctAnswer, setCorrectAnswer] = useState("");
   const [errors, setErrors] = useState({});
+  const userData = useSelector(state => state.auth.userData);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const userId = userData.$id;
+
+
+  // Variables for handling image
+  const [file, setFile] = useState(null);
+  const [feedback, setFeedback] = useState("");
+  const [isValid, setIsValid] = useState(null); // null: not checked, true: valid, false: invalid
+
+  const handleImageUpload = (event) => {
+    const selectedFile = event.target.files[0];
+    
+    if (selectedFile){
+      // Validate the valid file types 
+      const validTypes = ["image/jpeg", "image/png", "image/gif"];
+      if (validTypes.includes(selectedFile.type)) {
+        setFile(selectedFile);
+        setFeedback('File uploaded successfully');
+        setIsValid(true); 
+      } else {
+        setFile(null);
+        setIsValid(false);
+        setFeedback('Please upload image file (jpg, jpeg, or png)');
+      }
+    }
+  }; 
 
 
   // Add a new option
   const addOption = () => {
+    if (!isOption) {
+      setIsOption(true);
+      setOptions([...options, "", ""]);
+    } else {
     setOptions([...options, ""]);
+    }
   };
 
   // Remove an option
@@ -52,15 +86,17 @@ const AddQuestion = () => {
     }
 
     // Validate Options
-    options.forEach((option, index) => {
-      if (!option.trim()) {
-        newErrors[`option${index}`] = `Option ${index + 1} is required.`;
-      }
-    });
+    if (isOption) {
+      options.forEach((option, index) => {
+        if (!option.trim()) {
+          newErrors[`option${index}`] = `Option ${index + 1} is required.`;
+        }
+      });
+    }
 
     // Validate Correct Answer
     if (!correctAnswer) {
-      newErrors.correctAnswer = "Please select the correct answer.";
+      newErrors.correctAnswer = "Please enter the correct answer.";
     }
 
     setErrors(newErrors);
@@ -69,20 +105,29 @@ const AddQuestion = () => {
 
   // Add the question to backend
   const createQuestion = async () => {
+
     const data = {
         question,
         subject,
         options,
-        correctAnswer
+        correctAnswer, 
+        userId
       }
     try {
-        const response = await databaseService.addQuestion(data);
+    
+        const imgFile = file ? await storageService.uploadFile(file) : null;
+        console.log(imgFile)
+        const response = await databaseService.addQuestion({
+          ...data, 
+          imageId: imgFile ? imgFile.$id : null
+        });
         if (response){
             dispatch(addQuestion(data))
 
         }
-        navigate('/addQuestion');
-        location.reload()
+        navigate('/');
+        location.reload();
+        
         
     } catch (error) {
         console.log('Error in submitting question', error);
@@ -146,7 +191,7 @@ const AddQuestion = () => {
           </div>
 
           {/* Options Fields */}
-          {options.map((option, index) => (
+          {isOption && options.map((option, index) => (
             <div key={index} className="mb-6">
               <label
                 htmlFor={`option${index}`}
@@ -197,6 +242,8 @@ const AddQuestion = () => {
             <label htmlFor="correctAnswer" className="block text-sm font-medium text-gray-700 mb-2">
               Correct Answer
             </label>
+            
+            {isOption ? ( 
             <select
               id="correctAnswer"
               value={correctAnswer}
@@ -211,12 +258,31 @@ const AddQuestion = () => {
                   Option {index + 1}
                 </option>
               ))}
-            </select>
+            </select>) : (
+              <>
+              <input
+              type="text"
+              id={`correctAnswer`}
+              placeholder={`Enter the Correct Answer`}
+              value={correctAnswer}
+              onChange={(e) => setCorrectAnswer(e.target.value)}
+              className={`w-full px-4 py-2 border border-gray-300
+               rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+            />
+           
+            </>
+            )}
             {errors.correctAnswer && (
               <p className="text-red-500 text-sm mt-1">{errors.correctAnswer}</p>
             )}
           </div>
 
+          {/* Add The imgae input */}
+          <ImageInput 
+            handleImageUpload={handleImageUpload}
+            feedback={feedback}
+            isValid={isValid}
+          />
           {/* Submit Button */}
           <button
             type="submit"
